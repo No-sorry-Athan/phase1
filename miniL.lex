@@ -147,7 +147,7 @@ WHITESPACE  [\r\t\f\v ]
    {COMMENT_STRING}            {currentRow++; currentCol = 0; } 
    {NEWLINE}                   {currentRow++; currentCol = 0; }
    [\n]                        {printf("\n"); currentRow++; currentCol = 0; }
-   {WHITESPACE}                {currentCol++;}
+   {WHITESPACE}                {currentCol+=yyleng;}
 
    [^\n]                       {printf("Error at line %d, column %d: unrecognized symbol \"%s\".\n", currentRow, currentCol, yytext); return;}
 %%
