@@ -52,8 +52,8 @@ GT    ">"
 LTE   "<="
 GTE   ">="
    /* identifiers and numbers */
-IDENT "identifier"
-NUMBER "number"
+IDENT    [a-zA-Z]+([a-zA-Z0-9_][a-zA-Z0-9])*
+NUMBER   [0-9]+
 
    /* special symbols */
 
@@ -66,11 +66,12 @@ L_SQUARE_BRACKET "["
 R_SQUARE_BRACKET "]"
 ASSIGN           ":="
    /* other */
-COMMENT_STRING "##.*"
-CHARACTERS [a-zA-Z]
-NUMBERS    [0-9]
-WHITESPACE [\r\t\f\v ]
-ENDLINE    [$]
+COMMENT_STRING [#][#][^\n]*[\n]
+CHARACTERS  [a-zA-Z]
+NEWLINE     [^\n]
+NUMBERS     [0-9]
+WHITESPACE  [\r\t\f\v ]
+ENDLINE     [$]
 
 %%
    /* specific lexer rules in regex */
@@ -84,7 +85,7 @@ ENDLINE    [$]
 {BEGIN_LOCALS} { printf("BEGIN_LOCALS"); }
 {END_LOCALS}   { printf("END_LOCALS"); }
 {BEGIN_BODY}   { printf("BEGIN_BODY"); }
-{END_BODY}     { printf("END_BODY"); }
+{END_BODY}     { printf("END_BODY\n"); }
 {INTEGER}      { printf("INTEGER"); }
 {ARRAY}        { printf("ARRAY"); }
 {OF}           { printf("OF"); }
@@ -124,8 +125,8 @@ ENDLINE    [$]
 
  /* identifiers */
 
-{IDENT}{CHARACTERS}+ { printf("IDENT %s", yytext); }
-{NUMBER}{NUMBERS}+   { printf("NUMBER %d", atoi(yytext)); }
+{IDENT}     { printf("IDENT %s\n", yytext); }
+{NUMBER}    { printf("NUMBER %d\n", atoi(yytext)); }
 
  /* special symbols*/
 {SEMICOLON}   { printf("SEMICOLON"); }
@@ -138,10 +139,10 @@ ENDLINE    [$]
 {ASSIGN}            { printf("ASSIGN "); }
 
  /* other */
- {WHITESPACE}*{COMMENT_STRING}  {}
- /* {ENDLINE}                   {} */
+   {COMMENT_STRING}            {}
+   {NEWLINE}                   {}
  /* " "                         {} */
- /* {WHITESPACE}*{CHARACTERS}+  { printf("INDENT ");} */
+    {WHITESPACE}*               { /*printf("INDENT ");*/ }
  /* {CHARACTERS}+        {printf("%s\n", yytext);} */
  /* {NUMBERS}+                  { printf("%d\n", atoi(yytext)); } */
 %%
