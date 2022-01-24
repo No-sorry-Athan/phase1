@@ -89,8 +89,7 @@ WHITESPACE	[\r\t\f\v ]
 {ARRAY}				{ printf("ARRAY\n");  currentCol += yyleng;}
 {OF}				{ printf("OF\n");  currentCol += yyleng;}
 {IF}				{ printf("IF\n");  currentCol += yyleng;}
-{THEN}"\n"{WHITESPACE}+		{ printf("THEN\n"); currentRow++; currentCol = 0;}
-{THEN}"\n"			{ printf("THEN"); currentRow++; currentCol = 0;}
+{THEN}"\n"			{ printf("THEN\n"); currentRow++; currentCol = 0;}
 {THEN}				{ printf("THEN\n");  currentCol += yyleng;}
 {ENDIF}				{ printf("ENDIF\n"); currentCol += yyleng; }
 {ELSE}				{ printf("ELSE");  currentCol += yyleng;}
@@ -125,8 +124,8 @@ WHITESPACE	[\r\t\f\v ]
 {GT}           { printf("GT\n");  currentCol += yyleng;}
 
 	/* identifiers */
-{IDENT_ERROR_1}       { printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter.\n", currentRow, currentCol,yytext); return;}
-{IDENT_ERROR_2}       { printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore.\n", currentRow, currentCol, yytext); return;}
+{IDENT_ERROR_1}       { printf("Error at line %d, column %d: identifier \"%s\" must begin with a letter.", currentRow, currentCol,yytext); return;}
+{IDENT_ERROR_2}       { printf("Error at line %d, column %d: identifier \"%s\" cannot end with an underscore.", currentRow, currentCol, yytext); return;}
 {IDENT}               { printf("IDENT %s\n", yytext);  currentCol += yyleng;}
 {NUMBER}              { printf("NUMBER %d\n", atoi(yytext));  currentCol += yyleng;}
 
@@ -148,7 +147,7 @@ WHITESPACE	[\r\t\f\v ]
    [\n]                        {printf("\n"); currentRow++; currentCol = 0; }
    {WHITESPACE}                {currentCol+=yyleng;}
 
-   [^\n]                       {printf("Error at line %d, column %d: unrecognized symbol \"%s\".\n", currentRow, currentCol, yytext); return;}
+   [^\n]                       {printf("Error at line %d, column %d: unrecognized symbol \"%s\".", currentRow, currentCol, yytext); return;}
 %%
 	/* C functions used in lexer */
 
